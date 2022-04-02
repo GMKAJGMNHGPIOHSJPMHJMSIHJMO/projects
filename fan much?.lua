@@ -3689,13 +3689,22 @@ Circle.Thickness = 2
 Circle.Color = Color3.new(1,1,1)
 Circle.Filled = false
 
+local Vec = Vector2.new
+local Mouse = Lp:GetMouse()
+
 local AimSettings = {
+    Enabled = false,
     TargetPart = "HumanoidRootPart",
     Radius = 150,
 }
 
-local Vec = Vector2.new
-local Mouse = Lp:GetMouse()
+Rs.RenderStepped:Connect(function()
+    Circle.Position = Vec(Mouse.X, Mouse.Y + 36)
+    Circle.Radius = AimSettings.Radius
+    Circle.Visible = AimSettings.Enabled
+end)
+
+
 local function getClosestPlayer()
     local Close
     for _,v in next, Players:GetPlayers() do
@@ -3915,9 +3924,6 @@ visualTab.espsec:AddSeperator("")
 
 visualTab.espsec:AddToggle("Dealer",false,function(s)
     EspSettings.CustomNPCs.Dealer = s
-end)
-visualTab.espsec:AddToggle("ATM",false,function(s)
-    EspSettings.CustomNPCs.ATM = s
 end)
 
 local AmbinetPicker = visualTab.lightsec:AddToggle("Custom Ambient",false,function(s)
