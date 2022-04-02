@@ -3727,7 +3727,7 @@ local Silent
 Silent = hookmetamethod(game, "__index", function(self, Key)
     if self == Mouse and (Key == "Hit" or Key == "Target") then
         if getClosestPlayer() ~= nil then
-            local HitPart = getClosestPlayer().Character[AimSettings.TargetPart]
+            local HitPart = getClosestPlayer()
 
             return ((Key == "Hit" and HitPart.CFrame) or (Key == "Target" and HitPart))
         end
