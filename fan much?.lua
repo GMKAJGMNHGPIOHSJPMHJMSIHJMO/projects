@@ -3872,7 +3872,8 @@ local Window = library:CreateWindow("ReaperMad", Vector2.new(492, 598))
 
 local Tabs = {
     maintab = Window:CreateTab("Chicago Remastered"),
-    visualtab = Window:CreateTab("Visuals")
+    visualtab = Window:CreateTab("Visuals"),
+    configtab = Window:CreateTab("Configuration")
 }
 
 local mainTab = {
@@ -3884,6 +3885,20 @@ local visualTab = {
     espsec = Tabs.visualtab:CreateSector("Esp", "left"),
     lightsec = Tabs.visualtab:CreateSector("Lighting", "right")
 }
+
+local configTab = {
+    configui = Tabs.configtab:CreateConfigSystem("right"),
+    uisec = Tabs.configtab:CreateConfigSystem("Toggle UI", "left")
+}
+
+local hidemenu = configTab.uisec:AddToggle("Toggle UI",false,function(s)
+    if s == true then
+        game:GetService'CoreGui'.ReaperMad.Enabled = false
+    else
+        game:GetService'CoreGui'.ReaperMad.Enabled = true
+    end
+end)
+hidemenu:AddKeybind(Enum.KeyCode.End, function() end)
 
 mainTab.mainsec:AddButton("Rejoin", function() game:GetService'TeleportService':Teleport(game.PlaceId, Lp) end)
 mainTab.aimsec:AddToggle("Enabled",false,function(s)
@@ -3898,6 +3913,14 @@ end)
 mainTab.aimsec:AddSlider("Fov Radius",50,150,500,false,function(v)
     AimSettings.Radius = v
 end)
+local targetareaDropdown = mainTab.aimsec:AddDropdown("TargetPart", {"Head", "Torso"},false,false,function(n)
+    if n == "Head" then
+        AimSettings.TargetPart = "Head"
+    elseif n == "Torso" then
+        AimSettings.TargetPart = "HumanoidRootPart"
+    end
+end)
+targetareaDropdown:Set("Torso")
 
 Rs.RenderStepped:Connect(function()
     if AmbientTog then
