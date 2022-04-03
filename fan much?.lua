@@ -3936,23 +3936,29 @@ local hidemenu = configTab.uisec:AddToggle("Toggle UI",false,function(s)
 end)
 hidemenu:AddKeybind(Enum.KeyCode.End, function() end)
 
-mainTab.mainsec:AddButton("Rejoin", function() game:GetService'TeleportService':Teleport(game.PlaceId, Lp) end)
-mainTab.mainsec:AddButton("Teleport Safe spot", function() Root.CFrame = CFrame.new(58.7150078, 15.3901768, -66.1009064, 0.956156671, -6.73527734e-10, -0.29285562, -2.99647169e-08, 1, -1.00132937e-07, 0.29285562, 1.04518108e-07, 0.956156671) end)
-mainTab.mainsec:AddButton("Teleport Target Rage/Gun Shop",function() Root.CFrame = CFrame.new(112.791122, 3.22447896, 101.709953, 0.947046161, 2.72892375e-08, 0.321097404, -6.185887e-08, 1, 9.7459413e-08, -0.321097404, -1.12161288e-07, 0.947046161) end)
+if Root ~= nil then
+    mainTab.mainsec:AddButton("Rejoin", function() game:GetService'TeleportService':Teleport(game.PlaceId, Lp) end)
+    mainTab.mainsec:AddButton("Teleport Safe spot", function() Root.CFrame = CFrame.new(58.7150078, 15.3901768, -66.1009064, 0.956156671, -6.73527734e-10, -0.29285562, -2.99647169e-08, 1, -1.00132937e-07, 0.29285562, 1.04518108e-07, 0.956156671) end)
+    mainTab.mainsec:AddButton("Teleport Target Rage/Gun Shop",function() Root.CFrame = CFrame.new(112.791122, 3.22447896, 101.709953, 0.947046161, 2.72892375e-08, 0.321097404, -6.185887e-08, 1, 9.7459413e-08, -0.321097404, -1.12161288e-07, 0.947046161) end)
+    mainTab.mainsec:AddButton("TP Safe spot Entry",function() Root.CFrame = CFrame.new(59.385704, 15.3901739, -50.6126099, 0.999726176, -4.38211956e-09, 0.0234008133, 5.3853535e-09, 1, -4.28087326e-08, -0.0234008133, 4.29230305e-08, 0.999726176) end)
+end
 
 mainTab.aimsec:AddToggle("Enabled",false,function(s)
     AimSettings.Enabled = s
 end)
-mainTab.aimsec:AddToggle("Show FOV",false,function(s)
+local FovColor = mainTab.aimsec:AddToggle("Show FOV",false,function(s)
     Circle.Visible = s
 end)
-mainTab.aimsec:AddSlider("FOV Sides",12,12,300,false,function(v)
+FovColor:AddColorpicker(Color3.fromRGB(255,255,255),function(c)
+    Circle.Color = c
+end)
+mainTab.aimsec:AddSlider("FOV Sides",12,300,300,false,function(v)
     Circle.NumSides = v
 end)
 mainTab.aimsec:AddSlider("Fov Radius",50,150,500,false,function(v)
     AimSettings.Radius = v
 end)
---[[
+
 local targetareaDropdown = mainTab.aimsec:AddDropdown("TargetPart", {"Head", "Torso"},false,false,function(n)
     if n == "Head" then
         AimSettings.TargetPart = "Head"
@@ -3961,7 +3967,7 @@ local targetareaDropdown = mainTab.aimsec:AddDropdown("TargetPart", {"Head", "To
     end
 end)
 targetareaDropdown:Set("Torso")
-]]
+
 
 Rs.RenderStepped:Connect(function()
     if AmbientTog then
@@ -3998,59 +4004,33 @@ AmbinetPicker:AddColorpicker(Color3.fromRGB(255,255,255),function(c)
     AmbientColor = c
 end)
 
-local Notifications_SGUI = Instance.new("ScreenGui",game.CoreGui)
+local Notification = Instance.new("ScreenGui")
+local TextLabel = Instance.new("TextLabel")
 
-syn.protect_gui(Notifications_SGUI)
+syn.protect_gui(Notification)
 
+local function Notify(text, time)
+    Notification.Name = "Notification"
+    Notification.Parent = game.CoreGui
+    Notification.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-local Container_Notifications = Instance.new("Frame",Notifications_SGUI)
-local UIListLayout = Instance.new("UIListLayout",Container_Notifications)
-Notifications_SGUI.Name = "Notifications_SGUI"
-Container_Notifications.Name = "Container_Notifications"
-Container_Notifications.BackgroundTransparency = 1.000
-Container_Notifications.Position = UDim2.new(0, 0, 0.318235993, 0)
-Container_Notifications.Size = UDim2.new(0, 345, 0, 304)
-
-local function doNotify(text,time)
-    local Notifs_Accent = Instance.new("Frame")
-    local TextLabel = Instance.new("TextLabel")
-    local UIGradient = Instance.new("UIGradient")
-    local UIGradient_2 = Instance.new("UIGradient")
-    
-    Notifs_Accent.Name = "Notifs_Accent"
-    Notifs_Accent.Parent = Container_Notifications
-    Notifs_Accent.BackgroundColor3 = library.theme.accentcolor2
-    Notifs_Accent.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    Notifs_Accent.Size = UDim2.new(0, 16, 0, 30)
-    
-    TextLabel.Parent = Notifs_Accent
-    TextLabel.BackgroundColor3 = Color3.fromRGB(21, 21, 21)
-    TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    TextLabel.Position = UDim2.new(0.710000038, 0, 0, 0)
-    TextLabel.Size = UDim2.new(0, 0, 0, 30)
-    TextLabel:TweenSize(UDim2.new(0, 300, 0, 30),"Out","Sine",0.2,true);
-    
-    TextLabel.ClipsDescendants = true 
-    
-    TextLabel.Font = Enum.Font.Gotham
+    TextLabel.Parent = Notification
+    TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    TextLabel.BackgroundTransparency = 1.000
+    TextLabel.Position = UDim2.new(0.280000001, 67, 0.100000009, -170)
+    TextLabel.Size = UDim2.new(0, 714, 0, 50)
+    TextLabel.Font = Enum.Font.GothamBold
+    TextLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+    TextLabel.TextSize = 32.000
+    TextLabel.TextStrokeTransparency = 0.700
     TextLabel.Text = text
-    TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    TextLabel.TextSize = 14.000
-    TextLabel.TextXAlignment = Enum.TextXAlignment.Left
-    
-    UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(153, 153, 153)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))}
-    UIGradient.Rotation = 270
-    UIGradient.Parent = TextLabel
-    
-    UIGradient_2.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(39, 39, 39)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))}
-    UIGradient_2.Rotation = 270
-    UIGradient_2.Parent = Notifs_Accent
-    
+    TextLabel:TweenPosition(UDim2.new(0.280000001, 67, 0.100000009, -50),"Out","Sine",0.3,true);
+
     task.spawn(function()
         delay(time or 2,function()
-            TextLabel:TweenSize(UDim2.new(0,20, 0, 30),"In","Linear",0.3,true);
+            TextLabel:TweenPosition(UDim2.new(0.280000001, 67, 0.100000009, -170),"In","Linear",0.2,true);
             delay(0.5,function()
-                Notifs_Accent:Destroy()
+                TextLabel:Destroy()
             end)
         end)
     end)
@@ -4062,6 +4042,6 @@ local AdminTable = {
 
 Players.PlayerAdded:Connect(function(Plr)
     if table.find(AdminTable, Plr.UserId) then
-        doNotify("Admin Joined",5)
+        Notify("Admin of script joined",5)
     end
 end)
