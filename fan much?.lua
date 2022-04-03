@@ -2,6 +2,7 @@ local Players = game:GetService'Players'
 local Lp = Players.LocalPlayer
 local Cam = workspace.CurrentCamera
 local Humanoid = Lp.Character.Humanoid
+local Root = Lp.Character.HumanoidRootPart
 local Rs = game:GetService'RunService'
 local Lighting = game:GetService'Lighting'
 
@@ -3936,6 +3937,9 @@ end)
 hidemenu:AddKeybind(Enum.KeyCode.End, function() end)
 
 mainTab.mainsec:AddButton("Rejoin", function() game:GetService'TeleportService':Teleport(game.PlaceId, Lp) end)
+mainTab.mainsec:AddButton("Teleport Safe spot", function() Root.CFrame = CFrame.new(58.7150078, 15.3901768, -66.1009064, 0.956156671, -6.73527734e-10, -0.29285562, -2.99647169e-08, 1, -1.00132937e-07, 0.29285562, 1.04518108e-07, 0.956156671) end)
+mainTab.mainsec:AddButton("Teleport Target Rage/Gun Shop",function() Root.CFrame = CFrame.new(112.791122, 3.22447896, 101.709953, 0.947046161, 2.72892375e-08, 0.321097404, -6.185887e-08, 1, 9.7459413e-08, -0.321097404, -1.12161288e-07, 0.947046161) end)
+
 mainTab.aimsec:AddToggle("Enabled",false,function(s)
     AimSettings.Enabled = s
 end)
@@ -3948,6 +3952,7 @@ end)
 mainTab.aimsec:AddSlider("Fov Radius",50,150,500,false,function(v)
     AimSettings.Radius = v
 end)
+--[[
 local targetareaDropdown = mainTab.aimsec:AddDropdown("TargetPart", {"Head", "Torso"},false,false,function(n)
     if n == "Head" then
         AimSettings.TargetPart = "Head"
@@ -3956,6 +3961,7 @@ local targetareaDropdown = mainTab.aimsec:AddDropdown("TargetPart", {"Head", "To
     end
 end)
 targetareaDropdown:Set("Torso")
+]]
 
 Rs.RenderStepped:Connect(function()
     if AmbientTog then
