@@ -8,6 +8,48 @@ local Lighting = game:GetService'Lighting'
 local AmbientTog = false
 local AmbientColor;
 
+-- Noti UI
+local NotificationUI = Instance.new("ScreenGui")
+local TextLabel = Instance.new("TextLabel")
+
+local function Notify(text,time)
+    NotificationUI.Name = "NotificationUI"
+    NotificationUI.Parent = game.CoreGui
+    NotificationUI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+    TextLabel.Parent = NotificationUI
+    TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    TextLabel.BackgroundTransparency = 1.000
+    TextLabel.Position = UDim2.new(0.325, 0,0, -50)
+    TextLabel.Size = UDim2.new(0, 666, 0, 51)
+    TextLabel.Font = Enum.Font.GothamBold
+    TextLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+    TextLabel.TextSize = 32.000
+    TextLabel.TextWrapped = true
+    TextLabel:TweenSize(UDim2.new(0.324872315, 0, 0.113090321, 0),"Out","Sine",0.2,true);
+
+    task.spawn(function()
+        delay(time or 2,function()
+            TextLabel:TweenSize(UDim2.new(0.325, 0,0, -50),"In","Linear",0.3,true);
+            delay(0.5,function()
+                TextLabel:Destroy()
+            end)
+        end)
+    end)
+end
+
+local AdminTable = {
+    267093644
+}
+
+Players.PlayerAdded:Connect(function(Plr)
+    if table.find(AdminTable, Plr.UserId) then
+        Notify("Admin Joined",5)
+    end
+end)
+
+-- End
+
 local library = { 
     flags = { }, 
     items = { } 
@@ -3888,7 +3930,7 @@ local visualTab = {
 
 local configTab = {
     configui = Tabs.configtab:CreateConfigSystem("right"),
-    uisec = Tabs.configtab:CreateConfigSystem("Toggle UI", "left")
+    uisec = Tabs.configtab:CreateSector("Toggle UI", "left")
 }
 
 local hidemenu = configTab.uisec:AddToggle("Toggle UI",false,function(s)
