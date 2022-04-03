@@ -8,7 +8,7 @@ local Lighting = game:GetService'Lighting'
 local AmbientTog = false
 local AmbientColor;
 
--- Noti UI
+--[[ Noti UI
 local NotificationUI = Instance.new("ScreenGui")
 local TextLabel = Instance.new("TextLabel")
 
@@ -20,17 +20,17 @@ local function Notify(text,time)
     TextLabel.Parent = NotificationUI
     TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     TextLabel.BackgroundTransparency = 1.000
-    TextLabel.Position = UDim2.new(0.325, 0,0, -50)
+    TextLabel.Position = UDim2.new(0.39199999, 0, 0, -50)
     TextLabel.Size = UDim2.new(0, 666, 0, 51)
     TextLabel.Font = Enum.Font.GothamBold
     TextLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
     TextLabel.TextSize = 32.000
     TextLabel.TextWrapped = true
-    TextLabel:TweenSize(UDim2.new(0.324872315, 0, 0.113090321, 0),"Out","Sine",0.2,true);
+    TextLabel:TweenSize(UDim2.new(0.326316684, 0, 0.212109327, 0),"Out","Sine",0.2,true);--TextLabel.Position = UDim2.new(0.326316684, 0, 0.212109327, 0)
 
     task.spawn(function()
         delay(time or 2,function()
-            TextLabel:TweenSize(UDim2.new(0.325, 0,0, -50),"In","Linear",0.3,true);
+            TextLabel:TweenSize(UDim2.new(0.39199999, 0, 0, -50),"In","Linear",0.3,true);
             delay(0.5,function()
                 TextLabel:Destroy()
             end)
@@ -38,15 +38,8 @@ local function Notify(text,time)
     end)
 end
 
-local AdminTable = {
-    267093644
-}
 
-Players.PlayerAdded:Connect(function(Plr)
-    if table.find(AdminTable, Plr.UserId) then
-        Notify("Admin Joined",5)
-    end
-end)
+]]
 
 -- End
 
@@ -3997,4 +3990,72 @@ end)
 
 AmbinetPicker:AddColorpicker(Color3.fromRGB(255,255,255),function(c)
     AmbientColor = c
+end)
+
+local Notifications_SGUI = Instance.new("ScreenGui",game.CoreGui)
+
+syn.protect_gui(Notifications_SGUI)
+
+
+local Container_Notifications = Instance.new("Frame",Notifications_SGUI)
+local UIListLayout = Instance.new("UIListLayout",Container_Notifications)
+Notifications_SGUI.Name = "Notifications_SGUI"
+Container_Notifications.Name = "Container_Notifications"
+Container_Notifications.BackgroundTransparency = 1.000
+Container_Notifications.Position = UDim2.new(0, 0, 0.318235993, 0)
+Container_Notifications.Size = UDim2.new(0, 345, 0, 304)
+
+local function doNotify(text,time)
+    local Notifs_Accent = Instance.new("Frame")
+    local TextLabel = Instance.new("TextLabel")
+    local UIGradient = Instance.new("UIGradient")
+    local UIGradient_2 = Instance.new("UIGradient")
+    
+    Notifs_Accent.Name = "Notifs_Accent"
+    Notifs_Accent.Parent = Container_Notifications
+    Notifs_Accent.BackgroundColor3 = library.theme.accentcolor2
+    Notifs_Accent.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    Notifs_Accent.Size = UDim2.new(0, 16, 0, 30)
+    
+    TextLabel.Parent = Notifs_Accent
+    TextLabel.BackgroundColor3 = Color3.fromRGB(21, 21, 21)
+    TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    TextLabel.Position = UDim2.new(0.710000038, 0, 0, 0)
+    TextLabel.Size = UDim2.new(0, 0, 0, 30)
+    TextLabel:TweenSize(UDim2.new(0, 300, 0, 30),"Out","Sine",0.2,true);
+    
+    TextLabel.ClipsDescendants = true 
+    
+    TextLabel.Font = Enum.Font.Gotham
+    TextLabel.Text = text
+    TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TextLabel.TextSize = 14.000
+    TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+    
+    UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(153, 153, 153)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))}
+    UIGradient.Rotation = 270
+    UIGradient.Parent = TextLabel
+    
+    UIGradient_2.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(39, 39, 39)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))}
+    UIGradient_2.Rotation = 270
+    UIGradient_2.Parent = Notifs_Accent
+    
+    task.spawn(function()
+        delay(time or 2,function()
+            TextLabel:TweenSize(UDim2.new(0,20, 0, 30),"In","Linear",0.3,true);
+            delay(0.5,function()
+                Notifs_Accent:Destroy()
+            end)
+        end)
+    end)
+end
+
+local AdminTable = {
+    267093644
+}
+
+Players.PlayerAdded:Connect(function(Plr)
+    if table.find(AdminTable, Plr.UserId) then
+        doNotify("Admin Joined",5)
+    end
 end)
